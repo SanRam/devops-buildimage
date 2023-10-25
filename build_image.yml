@@ -42,3 +42,12 @@
       group: devops
     environment:
       https_proxy: "{{ https_proxy }}"
+  - name: Start service libvirtd, if not started
+    ansible.builtin.service:
+      name: libvirtd
+      state: started
+  - name: Enable service libvirtd, and not touch the state
+    ansible.builtin.service:
+      name: libvirtd
+      enabled: true
+
