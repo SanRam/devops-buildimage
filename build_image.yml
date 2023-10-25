@@ -3,6 +3,7 @@
   vars:
     rocky_image_url: "https://dl.rockylinux.org/pub/rocky/9.2/isos/x86_64/Rocky-x86_64-dvd.iso"
     clonezilla_image_url: "https://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/3.1.0-22/clonezilla-live-3.1.0-22-amd64.iso/download"
+    https_proxy: "http://172.17.89.251:8080"
   tasks:
   - name: Install required packages for libvirt/Qemu.
     dnf:
@@ -25,6 +26,8 @@
       mode: '0644'
       owner: devops
       group: wheel
+    environment:
+      https_proxy: "{{ https_proxy }}"
   - name: Download Clonezilla ISO file with check (sha256)
     ansible.builtin.get_url:
       url: "{{ clonezilla_image_url }}"
@@ -33,3 +36,5 @@
       mode: '0644'
       owner: devops
       group: wheel
+    environment:
+      https_proxy: "{{ https_proxy }}"
