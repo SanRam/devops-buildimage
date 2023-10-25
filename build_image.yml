@@ -75,7 +75,7 @@
         
   - name: wait for VMs ssh
     wait_for:
-      host: "192.168.18.5"
+      host: "192.168.122.12"
       port: 22
       delay: 10
       timeout: 300
