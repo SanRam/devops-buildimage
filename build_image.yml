@@ -50,4 +50,33 @@
     ansible.builtin.service:
       name: libvirtd
       enabled: true
+  - name: install vm
+      command: virt-install --name "rockyvm"
+               --memory 2000 # in MiB
+               --metadata OS="Rocky9"
+               # --location="{{ hostvars[inventory_hostname]['vm']['location']  }}"
+               --noautoconsole
+               --disk size=20,pool=
+               --initrd-inject /file/ks.cfg
+               --extra-args="ks=file:/ks.cfg console=tty0 console=ttyS0,115200n8" 
+               -w bridge={{ hostvars[inventory_hostname]['vm']['net']['bridge'] }},model=virtio
+               --graphics vnc
+               -x "url=http://{{ hostvars[inventory_hostname]['vm']['preseed_ip'] }}:{{ hostvars[inventory_hostname]['vm']['preseed_port'] }}/preseed.cfg locale={{ hostvars[inventory_hostname]['vm']['locale'] | default('en_US') }} console-setup/ask_detect=false keymap={{ hostvars[inventory_hostname]['vm']['keymap'] | default('us') }} hostname={{ hostvars[inventory_hostname]['vm']['hostname'] | default(inventory_hostname) }} domain={{ hostvars[inventory_hostname]['vm']['domain'] }}"
+               --wait=-1
+      delegate_to: "{{ hostvars[inventory_hostname]['vm']['hypervisor'] }}"
+    
+    - name: wait for VMs ssh
+      wait_for:
+        host: "{{ hostvars[inventory_hostname]['vm']['ipaddress'] }}"
+        port: 22
+        delay: 10
+        timeout: 600
+      vars:
+      when: hostvars[inventory_hostname]['vm']['ipaddress'] is defined
+      delegate_to: "{{ hostvars[inventory_hostname]['vm']['hypervisor'] }}"
+    
+    - name: wait for VM
+      wait_for: timeout=120
+      when: hostvars[inventory_hostname]['vm']['ipaddress'] is not defined
+      delegate_to: "{{ hostvars[inventory_hostname]['vm']['hypervisor'] }}"
 
