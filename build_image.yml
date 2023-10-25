@@ -60,6 +60,7 @@
   - name: Install/configure/create Rocky VM - from iso and kisckstart
     command: virt-install --name "rockyvm"
              --memory 2000
+             --vcpus 8
              --metadata "description=Rocky9"
              --location ./"{{ rocky_image_file_name }}"
              --noautoconsole
