@@ -52,7 +52,7 @@
       enabled: true
   - name: Remove any Old VM
     command: virsh undefine "rockyvm" --remove-all-storage
-      
+    
   - name: Install/configure/create Rocky VM - from iso and kisckstart
     command: virt-install --name "rockyvm"
              --memory 2000
@@ -65,12 +65,12 @@
              --graphics vnc
              --wait=-1
              --os-variant RockyLinux-9.2      
-             --debug 
-    
-    - name: wait for VMs ssh
-      wait_for:
-        host: "192.168.18.5"
-        port: 22
-        delay: 10
-        timeout: 300
+             --debug
+        
+  - name: wait for VMs ssh
+    wait_for:
+      host: "192.168.18.5"
+      port: 22
+      delay: 10
+      timeout: 300
 
