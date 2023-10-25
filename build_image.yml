@@ -63,7 +63,7 @@
              --disk size=20
              --initrd-inject ./files/ssg-rhel9-stig-ks.cfg
              --extra-args="ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
-             --network bridge=default,model=virtio
+             --network bridge=virb0,model=virtio
              --graphics vnc
              --wait=-1
              --os-variant "rocky9.0"
