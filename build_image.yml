@@ -10,9 +10,7 @@
         - libvirt-client
         - virt-manager
         - virt-install
-        - bridge-utils
         - virt-top
         - libguestfs-tools
-        - bridge-utils
         - virt-viewer
       state: latest
