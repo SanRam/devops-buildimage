@@ -66,7 +66,7 @@
              --noautoconsole
              --nographics
              --disk size=40
-             --initrd-inject ./files/ssg-rhel9-stig-ks.cfg
+             --initrd-inject=./files/ssg-rhel9-stig-ks.cfg
              --extra-args="inst.ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
              --network bridge=virbr0,model=virtio             
              --wait=-1
