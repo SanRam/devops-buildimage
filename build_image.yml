@@ -61,7 +61,7 @@
              --location ./"{{ rocky_image_file_name }}"
              --noautoconsole
              --disk size=20
-             --initrd-inject ./file/ssg-rhel9-stig-ks.cfg
+             --initrd-inject ./files/ssg-rhel9-stig-ks.cfg
              --extra-args="ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
              --network bridge=default,model=virtio
              --graphics vnc
