@@ -1,1 +1,18 @@
-
+---
+- hosts: default
+  tasks:
+  - name: Install required packages for libvirt/Qemu.
+    dnf:
+      name:
+        - epel-release
+        - qemu-kvm
+        - libvrt
+        - libvirt-client
+        - virt-manager
+        - virt-install
+        - bridge-utils
+        - virt-top
+        - libguestfs-tools
+        - bridge-utils
+        - virt-viewer
+      state: latest
