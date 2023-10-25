@@ -58,6 +58,7 @@
     command: virt-install --name "rockyvm"
              --memory 2000
              --metadata "description=Rocky9"
+             --location ./"{{ rocky_image_file_name }}"
              --noautoconsole
              --disk size=20
              --initrd-inject ./file/ssg-rhel9-stig-ks.cfg
