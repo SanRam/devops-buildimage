@@ -14,3 +14,13 @@
         - libguestfs-tools
         - virt-viewer
       state: latest
+  - name: Download Rocky 9.2 DVD file with check (sha256)
+    ansible.builtin.get_url:
+      url: https://dl.rockylinux.org/pub/rocky/9.2/isos/x86_64/Rocky-x86_64-dvd.iso
+      dest: ./Rocky-x86_64-dvd.iso
+      checksum: sha256:cd43bb2671472471b1fc0a7a30113dfc9a56831516c46f4dbd12fb43bb4286d2
+  - name: Download Clonezilla ISO file with check (sha256)
+    ansible.builtin.get_url:
+      url: https://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/3.1.0-22/clonezilla-live-3.1.0-22-amd64.iso/download
+      dest: ./clonezilla-live-3.1.0-22-amd64.iso
+      checksum: sha256:6e3cd3b52fb60bf21f21b50e682b0f1cc5391c2aa97f51e20b675bd42ee84dfd
