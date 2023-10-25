@@ -65,7 +65,7 @@
              --network bridge=default,model=virtio
              --graphics vnc
              --wait=-1
-             --os-variant RockyLinux-9.2      
+             --os-variant "rocky9.0"
              --debug
         
   - name: wait for VMs ssh
