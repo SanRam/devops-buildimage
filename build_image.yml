@@ -57,7 +57,7 @@
   - name: Install/configure/create Rocky VM - from iso and kisckstart
     command: virt-install --name "rockyvm"
              --memory 2000
-             --metadata OS="Rocky9"
+             --metadata "description=Rocky9"
              --noautoconsole
              --disk size=20
              --initrd-inject /file/ssg-rhel9-stig-ks.cfg
