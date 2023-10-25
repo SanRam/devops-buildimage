@@ -2,14 +2,6 @@ pipeline {
   agent {label 'imageserver'}
 
   stages {
-    stage('Add Proxy for Internet Connection') {
-      steps {
-        sh '''
-          export http_proxy=http://172.17.89.251:8080
-          export https_proxy=http://172.17.89.251:8080
-        '''
-      }      
-    }
     stage('Install/Check packages') {
       steps {
         sh '''
