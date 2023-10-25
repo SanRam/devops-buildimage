@@ -60,8 +60,8 @@
              --metadata "description=Rocky9"
              --noautoconsole
              --disk size=20
-             --initrd-inject /file/ssg-rhel9-stig-ks.cfg
-             --extra-args="ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8 locale=default('en_US') locale=default('en_US') console-setup/ask_detect=false keymap=default('us') hostname=192.168.18.5 domain=192.168.18.1" 
+             --initrd-inject ./file/ssg-rhel9-stig-ks.cfg
+             --extra-args="ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
              --network bridge=default,model=virtio
              --graphics vnc
              --wait=-1
