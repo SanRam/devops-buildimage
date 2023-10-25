@@ -50,8 +50,8 @@
     ansible.builtin.service:
       name: libvirtd
       enabled: true
-  - name: Stop running VM
-    command: virsh shutdown "rockyvm"
+  - name: Stop/destroy running VM (not gracefull)
+    command: virsh destroy "rockyvm"
     ignore_errors: true
   - name: Remove Old VM
     command: virsh undefine "rockyvm" --remove-all-storage
