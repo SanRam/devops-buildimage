@@ -64,11 +64,12 @@
              --metadata "description=Rocky9"
              --location ./"{{ rocky_image_file_name }}"
              --noautoconsole
+             --nographics
              --disk size=40
              --initrd-inject ./files/ssg-rhel9-stig-ks.cfg
              --extra-args="ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
              --network bridge=virbr0,model=virtio
-             --graphics vnc
+             --graphics none
              --wait=-1
              --os-variant "rocky9.0"
              --debug
