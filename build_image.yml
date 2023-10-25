@@ -51,21 +51,21 @@
       name: libvirtd
       enabled: true
   - name: Remove any Old VM
-      command: virsh undefine "rockyvm" --remove-all-storage
+    command: virsh undefine "rockyvm" --remove-all-storage
       
   - name: Install/configure/create Rocky VM - from iso and kisckstart
-      command: virt-install --name "rockyvm"
-               --memory 2000 # in MiB
-               --metadata OS="Rocky9"
-               --noautoconsole     # --location="{{ hostvars[inventory_hostname]['vm']['location']  }}"
-               --disk size=20 # in GiB
-               --initrd-inject /file/ssg-rhel9-stig-ks.cfg
-               --extra-args="ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8 locale=default('en_US') locale=default('en_US') console-setup/ask_detect=false keymap=default('us') hostname=192.168.18.5 domain=192.168.18.1" 
-               --network bridge=default,model=virtio
-               --graphics vnc
-               --wait=-1
-               --os-variant RockyLinux-9.2      
-               --debug #--boot cdrom
+    command: virt-install --name "rockyvm"
+             --memory 2000 # in MiB
+             --metadata OS="Rocky9"
+             --noautoconsole     # --location="{{ hostvars[inventory_hostname]['vm']['location']  }}"
+             --disk size=20 # in GiB
+             --initrd-inject /file/ssg-rhel9-stig-ks.cfg
+             --extra-args="ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8 locale=default('en_US') locale=default('en_US') console-setup/ask_detect=false keymap=default('us') hostname=192.168.18.5 domain=192.168.18.1" 
+             --network bridge=default,model=virtio
+             --graphics vnc
+             --wait=-1
+             --os-variant RockyLinux-9.2      
+             --debug #--boot cdrom
     
     - name: wait for VMs ssh
       wait_for:
