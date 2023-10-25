@@ -6,7 +6,7 @@
       name:
         - epel-release
         - qemu-kvm
-        - libvrt
+        - libvirt
         - libvirt-client
         - virt-manager
         - virt-install
