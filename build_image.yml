@@ -65,7 +65,7 @@
                --graphics vnc
                --wait=-1
                --os-variant RockyLinux-9.2      
-               --debug
+               --debug #--boot cdrom
     
     - name: wait for VMs ssh
       wait_for:
