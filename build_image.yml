@@ -52,6 +52,7 @@
       enabled: true
   - name: Remove any Old VM
     command: virsh undefine "rockyvm" --remove-all-storage
+    ignore_errors: true
     
   - name: Install/configure/create Rocky VM - from iso and kisckstart
     command: virt-install --name "rockyvm"
