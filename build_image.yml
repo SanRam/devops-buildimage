@@ -111,7 +111,7 @@
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2
-             --extra-args="console=tty0 console=ttyS0,115200n8" 
+             --extra-args="" 
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "unknown"
