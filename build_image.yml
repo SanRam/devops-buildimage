@@ -114,7 +114,7 @@
              --extra-args="" 
              --network bridge=virbr0,model=virtio             
              --wait=-1
-             --os-variant "linux22"
+             --os-variant "linux2022"
              --check path_in_use=off
              --debug
 
