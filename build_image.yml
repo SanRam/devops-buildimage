@@ -95,6 +95,9 @@
   - name: Undefine Old VM
     command: virsh undefine "rockyvm"
     ignore_errors: true
+  - name: Stop/Poweroff running VM (not gracefull)
+    command: virsh destroy "clonevm"
+    ignore_errors: true
   - name: Undefine Old VM
     command: virsh undefine "clonevm"
     ignore_errors: true
@@ -112,5 +115,6 @@
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "unknown"
+             --check path_in_use=off
              --debug
 
