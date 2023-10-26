@@ -106,7 +106,7 @@
     command: virt-install --name "clonevm"
              --memory 1000
              --vcpus 8
-             --metadata "description=Rocky9"
+             --metadata "description=Clonezilla"
              --location ./"{{ clonezilla_image_file_name }}"
              --noautoconsole
              --graphics vnc
@@ -114,7 +114,7 @@
              --extra-args="" 
              --network bridge=virbr0,model=virtio             
              --wait=-1
-             --os-variant "unknown"
+             --os-variant "linux22"
              --check path_in_use=off
              --debug
 
