@@ -95,6 +95,9 @@
   - name: Undefine Old VM
     command: virsh undefine "rockyvm"
     ignore_errors: true
+  - name: Undefine Old VM
+    command: virsh undefine "clonevm"
+    ignore_errors: true
     
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
