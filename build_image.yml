@@ -60,7 +60,7 @@
     ignore_errors: true
     when: run_rocky_vm_creation_flag
   - name: Create a predefined disk image
-    command: qemu-img create -f qcow2 ./files/rockyvm.qcow2 4000M
+    command: qemu-img create -f qcow2 ./files/rockyvm.qcow2 40000M
     when: run_rocky_vm_creation_flag
     
   - name: Install/configure/create Rocky VM - from iso and kisckstart
