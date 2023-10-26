@@ -8,7 +8,7 @@
     clonezilla_image_file_name: "clonezilla-live-3.1.0-22-amd64.iso"
     clonezilla_image_checksum: "sha256:6e3cd3b52fb60bf21f21b50e682b0f1cc5391c2aa97f51e20b675bd42ee84dfd"
     https_proxy: "http://172.17.89.251:8080"
-    run_rocky_vm_creation_flag: true
+    run_rocky_vm_creation_flag: false
   tasks:
   - name: Install required packages for libvirt/Qemu.
     dnf:
@@ -33,6 +33,7 @@
       group: devops
     environment:
       https_proxy: "{{ https_proxy }}"
+    when: run_rocky_vm_creation_flag
   - name: Download Clonezilla ISO file with check (sha256)
     ansible.builtin.get_url:
       url: "{{ clonezilla_image_url }}"
@@ -90,6 +91,9 @@
     
   - name: Stop/Poweroff running VM (not gracefull)
     command: virsh destroy "rockyvm"
+    ignore_errors: true
+  - name: Undefine Old VM
+    command: virsh undefine "rockyvm"
     ignore_errors: true
     
   - name: Start Clonezilla on previouly created VM
