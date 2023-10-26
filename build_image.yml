@@ -8,6 +8,7 @@
     clonezilla_image_file_name: "clonezilla-live-3.1.0-22-amd64.iso"
     clonezilla_image_checksum: "sha256:6e3cd3b52fb60bf21f21b50e682b0f1cc5391c2aa97f51e20b675bd42ee84dfd"
     https_proxy: "http://172.17.89.251:8080"
+    run_rocky_vm_creation_flag: true
   tasks:
   - name: Install required packages for libvirt/Qemu.
     dnf:
@@ -50,12 +51,17 @@
     ansible.builtin.service:
       name: libvirtd
       enabled: true
-  - name: Stop/destroy running VM (not gracefull)
+  - name: Stop/Poweroff running VM (not gracefull)
     command: virsh destroy "rockyvm"
     ignore_errors: true
+    when: run_rocky_vm_creation_flag
   - name: Remove Old VM
     command: virsh undefine "rockyvm" --remove-all-storage
     ignore_errors: true
+    when: run_rocky_vm_creation_flag
+  - name: Create a predefined disk image 4000M
+    command: qemu-img create -f qcow2 ./files/rockyvm.qcow2
+    when: run_rocky_vm_creation_flag
     
   - name: Install/configure/create Rocky VM - from iso and kisckstart
     command: virt-install --name "rockyvm"
@@ -65,13 +71,14 @@
              --location ./"{{ rocky_image_file_name }}"
              --noautoconsole
              --nographics
-             --disk size=40
+             --disk ./files/rockyvm.qcow2
              --initrd-inject=./files/ssg-rhel9-stig-ks.cfg
              --extra-args="inst.ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "rocky9.0"
              --debug
+    when: run_rocky_vm_creation_flag
         
   - name: wait for VMs ssh
     wait_for:
@@ -79,4 +86,24 @@
       port: 22
       delay: 10
       timeout: 300
+    when: 0 > 1
+    
+  - name: Stop/Poweroff running VM (not gracefull)
+    command: virsh destroy "rockyvm"
+    ignore_errors: true
+    
+  - name: Start Clonezilla on previouly created VM
+    command: virt-install --name "clonevm"
+             --memory 1000
+             --vcpus 8
+             --metadata "description=Rocky9"
+             --location ./"{{ rocky_image_file_name }}"
+             --noautoconsole
+             --graphics vnc
+             --disk ./files/rockyvm.qcow2
+             --extra-args="console=tty0 console=ttyS0,115200n8" 
+             --network bridge=virbr0,model=virtio             
+             --wait=-1
+             --os-variant "rocky9.0"
+             --debug
 
