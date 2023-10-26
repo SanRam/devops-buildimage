@@ -110,8 +110,7 @@
              --cdrom ./"{{ clonezilla_image_file_name }}"
              --noautoconsole
              --graphics vnc
-             --disk ./files/rockyvm.qcow2
-             --extra-args="console=tty0 console=ttyS0,115200n8" 
+             --disk ./files/rockyvm.qcow2            
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "linux2022"
