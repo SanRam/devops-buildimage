@@ -126,7 +126,7 @@
              --location ./iso/clonezilla,kernel=live/vmlinuz,initrd=live/initrd
              --noautoconsole
              --graphics vnc
-             --disk ./files/rockyvm2.qcow2            
+             --disk ./files/rockyvm2.qcow2 4000MiB           
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "unknown"
