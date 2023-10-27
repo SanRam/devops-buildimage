@@ -116,5 +116,4 @@
              --os-variant "unknown"
              --check path_in_use=off
              --debug
-             --boot kernel_args="console=ttyS0"
 
