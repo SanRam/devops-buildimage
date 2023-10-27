@@ -129,7 +129,7 @@
              --disk ./files/rockyvm.qcow2            
              --network bridge=virbr0,model=virtio             
              --wait=-1
-             --os-variant "ubuntu-stable-latest"
+             --os-variant "unknown"
              --check path_in_use=off
              --extra-args="console=tty0 console=ttyS0,115200n8" 
 
