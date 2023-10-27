@@ -131,5 +131,4 @@
              --extra-args="console=tty0 console=ttyS0,115200n8" 
              --os-variant "ubuntu-stable-latest"
              --check path_in_use=off
-             --debug
 
