@@ -122,7 +122,7 @@
              --memory 1000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --location ./iso/clonezilla
+             --location ./iso/clonezilla,kernel=/live/vmlinuz,initrd=/live/initrd.img 
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2            
