@@ -117,18 +117,18 @@
       fstype: iso9660
       opts: ro
       state: present    
+      when: run_rocky_vm_creation_flag
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --location ./iso/clonezilla,kernel=live/vmlinuz,initrd=live/initrd.img 
+             --cdrom ./"{{ clonezilla_image_file_name }}"
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2            
              --network bridge=virbr0,model=virtio             
              --wait=-1
-             --extra-args="console=tty0 console=ttyS0,115200n8" 
              --os-variant "ubuntu-stable-latest"
              --check path_in_use=off
              --boot kernel=live/vmlinuz,initrd=live/initrd,kernel_args="console=ttyS0"
