@@ -107,13 +107,13 @@
              --memory 1000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --cdrom ./"{{ clonezilla_image_file_name }}"
+             --location ./"{{ clonezilla_image_file_name }}"
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2            
              --network bridge=virbr0,model=virtio             
              --wait=-1
-             --os-variant "linux2022"
+             --os-variant "unknown"
              --check path_in_use=off
              --debug
 
