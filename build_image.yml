@@ -117,7 +117,7 @@
       fstype: iso9660
       opts: ro
       state: present    
-      when: run_rocky_vm_creation_flag
+    when: run_rocky_vm_creation_flag
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
              --memory 4000
