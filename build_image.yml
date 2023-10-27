@@ -119,7 +119,7 @@
       state: present    
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
-             --memory 1000
+             --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
              --location ./iso/clonezilla,kernel=live/vmlinuz,initrd=live/initrd.img 
@@ -131,4 +131,5 @@
              --extra-args="console=tty0 console=ttyS0,115200n8" 
              --os-variant "ubuntu-stable-latest"
              --check path_in_use=off
+             --boot kernel=live/vmlinuz,initrd=live/initrd,kernel_args="console=ttyS0"
 
