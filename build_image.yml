@@ -116,5 +116,5 @@
              --os-variant "unknown"
              --check path_in_use=off
              --debug
-             --boot kernel=live/vmlinuz,initrd=live/initrd,kernel_args="console=ttyS0"
+             --boot kernel_args="console=ttyS0"
 
