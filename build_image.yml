@@ -115,7 +115,7 @@
       path: ./"{{ clonezilla_image_file_name }}"
       src: ./iso/clonezilla
       fstype: iso9660
-      opts: ro,noauto
+      opts: ro
       state: present    
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
