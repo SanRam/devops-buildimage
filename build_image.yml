@@ -123,7 +123,7 @@
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --livecd ./"{{ clonezilla_image_file_name }}"
+             --cdrom ./"{{ clonezilla_image_file_name }}"
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2            
