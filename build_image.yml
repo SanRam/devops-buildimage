@@ -123,7 +123,7 @@
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --cdrom ./"{{ clonezilla_image_file_name }}"
+             --livecd ./"{{ clonezilla_image_file_name }}"
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2            
@@ -132,4 +132,5 @@
              --os-variant "ubuntu-stable-latest"
              --check path_in_use=off
              --boot cdrom
+             
 
