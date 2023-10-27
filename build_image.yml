@@ -113,7 +113,7 @@
              --disk ./files/rockyvm.qcow2            
              --network bridge=virbr0,model=virtio             
              --wait=-1
-             --os-variant "unknown"
+             --os-variant "ubuntu-stable-latest"
              --check path_in_use=off
              --debug
 
