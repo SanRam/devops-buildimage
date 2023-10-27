@@ -101,13 +101,24 @@
   - name: Undefine Old VM
     command: virsh undefine "clonevm"
     ignore_errors: true
+  - name: Unmount a mounted volume (Clonezilla ISO Mounted Image)
+    ansible.posix.mount:
+      path: ./iso/clonezilla
+      state: unmounted
+  - name: Mount Clonzilla ISO read-only
+    ansible.posix.mount:
+      path: ./"{{ clonezilla_image_file_name }}"
+      src: ./iso/clonezilla
+      fstype: iso9660
+      opts: ro,noauto
+      state: present
     
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
              --memory 1000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --location ./"{{ clonezilla_image_file_name }}"
+             --location ./iso/clonezilla
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2            
