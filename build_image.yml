@@ -123,7 +123,7 @@
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --location ./iso/clonezilla,kernel=live/vmlinuz,initrd=live/initrd
+             --location ./"{{ clonezilla_image_file_name }}", initrd=live/initrd, kernel=live/vmlinuz , kernel_args_overwrite=yes
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm2.qcow2,size=1        
