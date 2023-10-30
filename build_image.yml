@@ -133,5 +133,5 @@
              --os-variant "unknown"
              --check path_in_use=off
              --boot initrd=live/initrd,kernel=live/vmlinuz
-             --extra-args="console=tty0 console=ttyS0,115200n8" , 
+             --extra-args="console=tty0 console=ttyS0,115200n8" 
 
