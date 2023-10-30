@@ -123,13 +123,15 @@
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --location ./"{{ clonezilla_image_file_name }}", initrd=live/initrd, kernel=live/vmlinuz 
+             --location ./"{{ clonezilla_image_file_name }}" 
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm2.qcow2,size=1        
              --network bridge=virbr0,model=virtio             
              --wait=-1
+             --os-type linux
              --os-variant "unknown"
              --check path_in_use=off
-             --extra-args="console=tty0 console=ttyS0,115200n8" 
+             --boot initrd=live/initrd,kernel=live/vmlinuz
+             --extra-args="console=tty0 console=ttyS0,115200n8" , 
 
