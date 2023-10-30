@@ -146,5 +146,4 @@
              --network bridge=ens192,model=virtio             
              --wait=-1
              --check path_in_use=off
-             --extra-args="console=tty0 console=ttyS0,115200n8" 
 
