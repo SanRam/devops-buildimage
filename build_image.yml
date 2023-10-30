@@ -123,7 +123,7 @@
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --location ./"{{ clonezilla_image_file_name }}" 
+             --cdrom ./"{{ clonezilla_image_file_name }}" 
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm2.qcow2,size=1        
@@ -132,6 +132,5 @@
              --os-type linux
              --os-variant "unknown"
              --check path_in_use=off
-             --boot initrd=live/initrd,kernel=live/vmlinuz
              --extra-args="console=tty0 console=ttyS0,115200n8" 
 
