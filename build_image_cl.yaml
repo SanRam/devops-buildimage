@@ -124,12 +124,12 @@
     command: 7z x ./"{{ clonezilla_image_file_name }}" -o./iso/clonezilla -aoa
     when: run_rocky_vm_creation_flag
   - name: Uncompress Sqashfs Filesystem 
-    command: unsquashfs -d ./iso/fs ./iso/clonezilla/live/filesystem.squashfs
+    command: unsquashfs -d ./iso/fs ./iso/clonezilla/live/filesystem.squashfs    
     when: run_rocky_vm_creation_flag
   - name: Add required start scripts to Sqaushfs
     copy:
       src: ./files/S02cmdline
-      dest: ./iso/fs/S02cmdline
+      dest: ./iso/fs/etc/ocs/ocs-live.d/S02cmdline
       force: yes 
       mode: a+x
     when: run_rocky_vm_creation_flag
