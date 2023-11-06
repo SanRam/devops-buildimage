@@ -1,0 +1,174 @@
+---
+- hosts: default
+  vars:
+    rocky_image_url: "https://dl.rockylinux.org/pub/rocky/9.2/isos/x86_64/Rocky-x86_64-minimal.iso"
+    rocky_image_file_name: "Rocky-x86_64-minimal.iso"
+    rocky_image_checksum: "sha256:06505828e8d5d052b477af5ce62e50b938021f5c28142a327d4d5c075f0670dc" # DVD cd43bb2671472471b1fc0a7a30113dfc9a56831516c46f4dbd12fb43bb4286d2
+    clonezilla_image_url: "https://sourceforge.net/projects/clonezilla/files/clonezilla_live_alternative/20230426-lunar/clonezilla-live-20230426-lunar-amd64.iso/download"
+    clonezilla_image_file_name: "clonezilla-live-3.1.0-22-amd64.iso"
+    clonezilla_image_checksum: "sha256:23ea69c738596292a78de07e77a211d06226144234d592ca0945cf5eccaa17b1"
+    https_proxy: "http://172.17.89.251:8080"
+    run_rocky_vm_creation_flag: false
+  tasks:
+  - name: Install required packages for libvirt/Qemu.
+    dnf:
+      name:
+        - epel-release
+        - qemu-kvm
+        - libvirt
+        - libvirt-client
+        - virt-manager
+        - virt-install
+        - virt-top
+        - libguestfs-tools
+        - virt-viewer
+        - pesign 
+        - openssl
+        - kernel-devel
+        - mokutil
+        - keyutils
+        - p7zip
+        - p7zip-plugins
+        - xorriso
+        - syslinux-nonlinux
+      state: latest
+  - name: Download Rocky 9.2 DVD file with check (sha256)
+    ansible.builtin.get_url:
+      url: "{{ rocky_image_url }}"
+      dest: ./{{ rocky_image_file_name }}
+      checksum: "{{ rocky_image_checksum }}"
+      mode: '0644'
+      owner: devops
+      group: devops
+    environment:
+      https_proxy: "{{ https_proxy }}"
+    when: run_rocky_vm_creation_flag
+  - name: Download Clonezilla ISO file with check (sha256)
+    ansible.builtin.get_url:
+      url: "{{ clonezilla_image_url }}"
+      dest: ./{{ clonezilla_image_file_name }}
+      checksum: "{{ clonezilla_image_checksum }}"
+      mode: '0644'
+      owner: devops
+      group: devops
+    environment:
+      https_proxy: "{{ https_proxy }}"
+  - name: Start service libvirtd, if not started
+    ansible.builtin.service:
+      name: libvirtd
+      state: started
+  - name: Enable service libvirtd, and not touch the state
+    ansible.builtin.service:
+      name: libvirtd
+      enabled: true
+  - name: Stop/Poweroff running VM (not gracefull)
+    command: virsh destroy "rockyvm"
+    ignore_errors: true
+    when: run_rocky_vm_creation_flag
+  - name: Remove Old VM
+    command: virsh undefine "rockyvm" --remove-all-storage
+    ignore_errors: true
+    when: run_rocky_vm_creation_flag
+  - name: Create a predefined disk image
+    command: qemu-img create -f qcow2 ./files/rockyvm.qcow2 40000M
+    when: run_rocky_vm_creation_flag
+    
+  - name: Install/configure/create Rocky VM - from iso and kisckstart
+    command: virt-install --name "rockyvm"
+             --memory 2000
+             --vcpus 8
+             --metadata "description=Rocky9"
+             --location ./"{{ rocky_image_file_name }}"
+             --noautoconsole
+             --nographics
+             --disk ./files/rockyvm.qcow2
+             --initrd-inject=./files/ssg-rhel9-stig-ks.cfg
+             --extra-args="inst.ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
+             --network bridge=virbr0,model=virtio             
+             --wait=-1
+             --os-variant "rocky9.0"
+             --debug
+    when: run_rocky_vm_creation_flag
+        
+  - name: wait for VMs ssh
+    wait_for:
+      host: "192.168.122.12"
+      port: 22
+      delay: 10
+      timeout: 300
+    when: 0 > 1
+    
+  - name: Stop/Poweroff running VM (not gracefull)
+    command: virsh destroy "rockyvm"
+    ignore_errors: true
+  - name: Undefine Old VM
+    command: virsh undefine "rockyvm"
+    ignore_errors: true
+  - name: Stop/Poweroff running VM (not gracefull)
+    command: virsh destroy "clonevm"
+    ignore_errors: true
+  - name: Undefine Old VM
+    command: virsh undefine "clonevm"
+    ignore_errors: true
+  - name: Delete Previous content & directory of ISO
+    file:
+      state: absent
+      path: ./iso
+  - name: Creates ISO Mount directory
+    file:
+      path: ./iso/clonezilla
+      state: directory
+      mode: '0755'
+        
+  - name: Unzip the CloneZilla ISO
+    command: 7z x ./"{{ clonezilla_image_file_name }}" -o./iso/clonezilla -aoa
+    when: run_rocky_vm_creation_flag
+  - name: Uncompress Sqashfs Filesystem 
+    command: unsquashfs -d ./iso/fs ./iso/clonezilla/live/filesystem.squashfs
+    when: run_rocky_vm_creation_flag
+  - name: Add required start scripts to Sqaushfs
+    copy:
+      src: ./files/S02cmdline
+      dest: ./iso/fs/S02cmdline
+      force: yes 
+      mode: a+x
+    when: run_rocky_vm_creation_flag
+  - name: Compress Sqashfs Filesystem 
+    command: mksquashfs ./iso/fs ./iso/filesystem.squashfs    
+    when: run_rocky_vm_creation_flag
+  - name: Copy Custom Sqaushfs back to Clonezilla ISO
+    copy:
+      src: ./iso/filesystem.squashfs
+      dest: ./iso/clonezilla/live/filesystem.squashfs
+      force: yes 
+      mode: '0644'
+    when: run_rocky_vm_creation_flag
+  - name: Make Custom Clonezilla ISO with required params/setting
+    command: xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes 
+             -iso-level 3 -isohybrid-mbr /usr/share/syslinux/isohdpfx.bin 
+             -partition_offset 16 -A "CloneZilla STERIS Live" 
+             -p "live-build" -publisher "Debian Live project; STERIS Custom" -V "Debian 20231104-13:44" 
+             --modification-date=2023110405440900 -b syslinux/isolinux.bin -c syslinux/boot.cat 
+             -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img 
+             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o clonezilla_custom.iso ./iso/clonezilla
+    when: run_rocky_vm_creation_flag
+  - name: Create Directory to load partclone file images
+    file:
+      path: ./iso/partclonedata
+      state: directory
+      mode: '0755'
+  - name: Start Clonezilla on previouly created VM
+    command: virt-install --name "clonevm"
+             --memory 4000
+             --vcpus 8
+             --metadata "description=Clonezilla"
+             --cdrom ./clonezilla_custom.iso 
+             --noautoconsole
+             --graphics vnc
+             --disk ./files/rockyvm.qcow2,size=1                 
+             --network bridge=virbr0,model=virtio             
+             --wait=-1
+             --os-variant "linux2022"
+             --check path_in_use=off
+  
+
