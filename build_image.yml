@@ -170,7 +170,7 @@
              --cdrom ./clonezilla_custom.iso 
              --noautoconsole
              --graphics vnc
-             --disk ./files/rockyvm2.qcow2,size=1    
+             --disk ./files/rockyvm.qcow2,size=1    
              --disk type=mount,source=./iso/partclonedata,mode=passthrough --filesystem /var/partclonedata
              --network bridge=virbr0,model=virtio             
              --wait=-1
