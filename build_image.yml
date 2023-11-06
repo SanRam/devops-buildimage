@@ -118,19 +118,22 @@
     ansible.posix.mount:
       path: ./iso/clonezilla
       state: unmounted      
-  - name: Mount Clonzilla ISO read-only
-    ansible.posix.mount:
-      path: ./"{{ clonezilla_image_file_name }}"
-      src: ./iso/clonezilla
-      fstype: iso9660
-      opts: ro,loop
-      state: present    
+  #- name: Mount Clonzilla ISO read-only
+  #  ansible.posix.mount:
+  #    path: ./"{{ clonezilla_image_file_name }}"
+  #    src: ./iso/clonezilla
+  #    fstype: iso9660
+  #    opts: ro,loop
+  #    state: present    
+      
+  - name: Unzip the CloneZilla ISO
+    command: 7z x ./"{{ clonezilla_image_file_name }}" -o ./iso/clonezilla
+    
   - name: Make Custom Clonezilla ISO with required params/setting
     command: xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes 
              -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin 
              -partition_offset 16 -A "CloneZilla Debian Live" 
-             -p "live-build 20230131.drbl2; https://salsa.debian.org/live-team/live-build" 
-             -publisher "Debian Live project; STERIS Custom" -V "Debian sid 20230426-13:44" 
+             -p "live-build" -publisher "Debian Live project; STERIS Custom" -V "Debian 20231104-13:44" 
              --modification-date=2023110405440900 -b isolinux/isolinux.bin -c isolinux/boot.cat 
              -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img 
              -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o live-image-amd64.hybrid.iso ./iso/clonezilla
