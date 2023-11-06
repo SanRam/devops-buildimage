@@ -30,6 +30,7 @@
         - p7zip
         - p7zip-plugins
         - xorriso
+        - syslinux-nonlinux
       state: latest
   - name: Download Rocky 9.2 DVD file with check (sha256)
     ansible.builtin.get_url:
@@ -127,23 +128,23 @@
   #    state: present    
       
   - name: Unzip the CloneZilla ISO
-    command: 7z x ./"{{ clonezilla_image_file_name }}" -o ./iso/clonezilla
+    command: 7z x ./"{{ clonezilla_image_file_name }}" -o./iso/clonezilla -aoa
     
   - name: Make Custom Clonezilla ISO with required params/setting
     command: xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes 
-             -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin 
+             -iso-level 3 -isohybrid-mbr /usr/share/syslinux/isohdpfx.bin 
              -partition_offset 16 -A "CloneZilla Debian Live" 
              -p "live-build" -publisher "Debian Live project; STERIS Custom" -V "Debian 20231104-13:44" 
-             --modification-date=2023110405440900 -b isolinux/isolinux.bin -c isolinux/boot.cat 
+             --modification-date=2023110405440900 -b syslinux/isolinux.bin -c syslinux/boot.cat 
              -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img 
-             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o live-image-amd64.hybrid.iso ./iso/clonezilla
+             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o clonezilla_custom.iso ./iso/clonezilla
       
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --cdrom ./"{{ clonezilla_image_file_name }}" 
+             --cdrom ./clonezilla_custom.iso 
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm2.qcow2,size=1        
@@ -152,19 +153,5 @@
              --os-variant "unknown"
              --check path_in_use=off
              --extra-args="console=tty0 console=ttyS0,115200n8" 
-    when: run_rocky_vm_creation_flag
-    
-  - name: Start Clonezilla PXE on previouly created VM
-    command: virt-install --name "clonevm"
-             --memory 4000
-             --vcpus 8
-             --metadata "description=Clonezilla"
-             --pxe
-             --noautoconsole
-             --graphics vnc
-             --disk ./files/rockyvm2.qcow2,size=1        
-             --network bridge=ens192,model=virtio             
-             --wait=-1
-             --check path_in_use=off
-             --os-variant "linux2022"
+  
 
