@@ -152,6 +152,5 @@
              --wait=-1
              --os-variant "unknown"
              --check path_in_use=off
-             --extra-args="console=tty0 console=ttyS0,115200n8" 
   
 
