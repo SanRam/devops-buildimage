@@ -169,7 +169,7 @@
              --filesystem ./iso/partclonedata,/var/partclonedata
              --network bridge=virbr0,model=virtio             
              --wait=-1
-             --os-variant "unknown"
+             --os-variant "linux2022"
              --check path_in_use=off
   
 
