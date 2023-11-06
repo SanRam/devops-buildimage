@@ -8,7 +8,7 @@
     clonezilla_image_file_name: "clonezilla-live-3.1.0-22-amd64.iso"
     clonezilla_image_checksum: "sha256:23ea69c738596292a78de07e77a211d06226144234d592ca0945cf5eccaa17b1"
     https_proxy: "http://172.17.89.251:8080"
-    run_rocky_vm_creation_flag: true
+    run_rocky_vm_creation_flag: false
   tasks:
   - name: Install required packages for libvirt/Qemu.
     dnf:
