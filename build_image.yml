@@ -157,7 +157,11 @@
              --modification-date=2023110405440900 -b syslinux/isolinux.bin -c syslinux/boot.cat 
              -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img 
              -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o clonezilla_custom.iso ./iso/clonezilla
-      
+  - name: Create Directory to load partclone file images
+    file:
+      path: ./iso/partclonedata
+      state: directory
+      mode: '0755'
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
              --memory 4000
@@ -166,7 +170,8 @@
              --cdrom ./clonezilla_custom.iso 
              --noautoconsole
              --graphics vnc
-             --disk ./files/rockyvm2.qcow2,size=1        
+             --disk ./files/rockyvm2.qcow2,size=1    
+             --disk type=mount,source=./iso/partclonedata,mode=passthrough --filesystem /var/partclonedata
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "unknown"
