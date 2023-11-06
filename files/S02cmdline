@@ -3,3 +3,4 @@
 #partclone.ext4 -c -s /dev/sdc2 | gzip -c - > boot.img.gz
 
 echo "success"
+/bin/bash
