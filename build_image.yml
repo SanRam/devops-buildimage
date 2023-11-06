@@ -127,7 +127,7 @@
   - name: Add required start scripts to Sqaushfs
     copy:
       src: ./files/S02cmdline
-      dest: ./iso/fs/S02cmdline
+      dest: ./iso/fs/etc/ocs/ocs-live.d/S02cmdline
       force: yes 
       mode: a+x
   - name: Compress Sqashfs Filesystem 
