@@ -126,7 +126,7 @@
       opts: ro,loop
       state: present    
   - name: Make Custom Clonezilla ISO with required params/setting
-    command: xorriso -R -r -J -joliet-long -l -cache-inodes 
+    command: xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes 
              -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin 
              -partition_offset 16 -A "CloneZilla Debian Live" 
              -p "live-build 20230131.drbl2; https://salsa.debian.org/live-team/live-build" 
