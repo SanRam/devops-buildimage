@@ -165,8 +165,7 @@
              --cdrom ./clonezilla_custom.iso 
              --noautoconsole
              --graphics vnc
-             --disk ./files/rockyvm.qcow2,size=1    
-             --filesystem ./iso/partclonedata,/var/partclonedata
+             --disk ./files/rockyvm.qcow2,size=1                 
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "linux2022"
