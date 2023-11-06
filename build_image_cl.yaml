@@ -150,7 +150,7 @@
              -p "live-build" -publisher "Debian Live project; STERIS Custom" -V "Debian 20231104-13:44" 
              --modification-date=2023110405440900 -b syslinux/isolinux.bin -c syslinux/boot.cat 
              -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img 
-             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o clonezilla_custom.iso ./iso/clonezilla
+             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o clonezilla_custom_cl.iso ./iso/clonezilla
     when: run_rocky_vm_creation_flag
   - name: Create Directory to load partclone file images
     file:
@@ -162,7 +162,7 @@
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --cdrom ./clonezilla_custom.iso 
+             --cdrom ./clonezilla_custom_cl.iso 
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2,size=1                 
