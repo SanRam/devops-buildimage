@@ -1,0 +1,3 @@
+#!/bin/bash
+partclone.fat32 -c -s /dev/sdc1 | gzip -c - > efi.img.gz
+partclone.ext4 -c -s /dev/sdc2 | gzip -c - > boot.img.gz
