@@ -166,7 +166,7 @@
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2,size=1    
-             --filesystem type=mount, source=./iso/partclonedata, mode=passthrough, target=/var/partclonedata
+             --filesystem ./iso/partclonedata,/var/partclonedata
              --network bridge=virbr0,model=virtio             
              --wait=-1
              --os-variant "unknown"
