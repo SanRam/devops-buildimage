@@ -22,6 +22,14 @@
         - virt-top
         - libguestfs-tools
         - virt-viewer
+        - pesign 
+        - openssl
+        - kernel-devel
+        - mokutil
+        - keyutils
+        - p7zip
+        - pzip-utils
+        - xorriso
       state: latest
   - name: Download Rocky 9.2 DVD file with check (sha256)
     ansible.builtin.get_url:
@@ -117,6 +125,15 @@
       fstype: iso9660
       opts: ro,loop
       state: present    
+  - name: Make Custom Clonezilla ISO with required params/setting
+    command: xorriso -R -r -J -joliet-long -l -cache-inodes 
+             -iso-level 3 -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin 
+             -partition_offset 16 -A "CloneZilla Debian Live" 
+             -p "live-build 20230131.drbl2; https://salsa.debian.org/live-team/live-build" 
+             -publisher "Debian Live project; STERIS Custom" -V "Debian sid 20230426-13:44" 
+             --modification-date=2023110405440900 -b isolinux/isolinux.bin -c isolinux/boot.cat 
+             -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img 
+             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o live-image-amd64.hybrid.iso ./iso/clonezilla
       
   - name: Start Clonezilla on previouly created VM
     command: virt-install --name "clonevm"
