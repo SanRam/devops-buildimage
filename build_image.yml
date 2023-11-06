@@ -28,7 +28,7 @@
         - mokutil
         - keyutils
         - p7zip
-        - pzip-utils
+        - p7zip-plugins
         - xorriso
       state: latest
   - name: Download Rocky 9.2 DVD file with check (sha256)
