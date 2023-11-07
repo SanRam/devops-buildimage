@@ -31,6 +31,7 @@
         - p7zip-plugins
         - xorriso
         - syslinux-nonlinux
+        - edk2-ovmf
       state: latest
   - name: Download Rocky 9.2 DVD file with check (sha256)
     ansible.builtin.get_url:
@@ -104,7 +105,7 @@
              --machine q35
              --serial=pty
              --features smm=on
-             --boot firmware=efi loader=/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd,loader_ro=yes,loader_type=pflash,nvram_template=/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd,loader_secure=yes           
+             --boot uefi           
     when: run_rocky_vm_creation_flag
         
   - name: wait for VMs ssh
