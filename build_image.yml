@@ -85,8 +85,7 @@
              --initrd-inject=./files/ssg-rhel9-stig-ks.cfg
              --extra-args="inst.ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
              --network bridge=virbr0,model=virtio             
-             --wait=-1
-             --boot uefi
+             --wait=-1             
              --os-variant "rocky9.0"
              --debug
     when: run_rocky_vm_creation_flag
