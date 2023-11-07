@@ -101,8 +101,9 @@
              --wait=-1             
              --os-variant "rocky9.0"
              --arch x86_64
-             --boot uefi,loader=/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd,loader_ro=yes,loader_type=pflash,nvram_template=/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd,loader_secure=yes
-             --debug
+             --machine q35
+             --serial=pty
+             --boot uefi,loader=/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd,loader_ro=yes,loader_type=pflash,nvram_template=/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd,loader_secure=yes             
     when: run_rocky_vm_creation_flag
         
   - name: wait for VMs ssh
