@@ -100,6 +100,8 @@
              --network bridge=virbr0,model=virtio             
              --wait=-1             
              --os-variant "rocky9.0"
+             --arch x86_64
+             --boot uefi, loader=/usr/share/edk2/ovmf/OVMF_CODE.fd
              --debug
     when: run_rocky_vm_creation_flag
         
