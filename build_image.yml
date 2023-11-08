@@ -220,8 +220,7 @@
              --cdrom ./clonezilla_custom.iso 
              --noautoconsole
              --graphics vnc
-             --disk ./files/rockyvm.qcow2,size=1                 
-             --network bridge=virbr0             
+             --disk ./files/rockyvm.qcow2,size=1            
              --wait=-1
              --os-variant "linux2022"
              --check path_in_use=off
