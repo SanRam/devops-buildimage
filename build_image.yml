@@ -221,7 +221,7 @@
              --noautoconsole
              --graphics vnc
              --disk ./files/rockyvm.qcow2,size=1                 
-             --network bridge=virbr0,model=virtio             
+             --network bridge=BRIDGE,network=virbr0             
              --wait=-1
              --os-variant "linux2022"
              --check path_in_use=off
