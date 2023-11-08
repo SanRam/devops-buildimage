@@ -6,5 +6,5 @@ echo "success"
 #/usr/sbin/partclone.ext4 -c -s /dev/vda2 | gzip -c - > root.img.gz
 dhclient eth0
 #sleep 20s
-#/usr/sbin/partclone.fat32 -c -s /dev/vda1 | gzip -c - | ssh -o StrictHostKeyChecking=no -i /home/user/.ssh/id_rsa_clonezilla_to_buildserver devops@10.11.49.177 (cat - > /home/devops/partclonedata/efi.img.gz) 
+#/usr/sbin/partclone.fat32 -c -s /dev/vda1 | gzip -c - | ssh -o StrictHostKeyChecking=no -i /home/user/.ssh/id_rsa_clonezilla_to_buildserver devops@10.11.49.177 "(cat - > /home/devops/partclonedata/efi.img.gz)"
 /bin/bash
