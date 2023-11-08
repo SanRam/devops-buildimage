@@ -162,13 +162,13 @@
       path: ./iso/fs/etc/skel/.ssh
       state: directory
     when: run_clonezilla_custom_vm_creation_flag
-  - name: Add required SSH pub key to skel
+  - name: Add pub key for devops user of buildserver to clonezilla skel
     copy:
       src: "/home/devops/.ssh/{{ssh_key_filename}}.pub"
       dest: ./iso/fs/etc/skel/.ssh
       force: yes 
     when: run_clonezilla_custom_vm_creation_flag
-  - name: Add pub key for devops user of buildserver to clonezilla
+  - name: Add required start scripts to Sqaushfs
     copy:
       src: ./files/S02cmdline
       dest: ./iso/fs/etc/ocs/ocs-live.d/S02cmdline
