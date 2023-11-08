@@ -138,7 +138,7 @@
     when: run_clonezilla_custom_vm_creation_flag 
   - name: Generate OpenSSH keypair "{{ssh_key_filename}}" this is needed for copying partclone file from clonezilla to buildserver
     openssh_keypair:
-      path: "~/.ssh/{{ssh_key_filename}}"
+      path: "/home/devops/.ssh/{{ssh_key_filename}}"
       type: rsa
       size: 4096
       state: present
@@ -146,6 +146,11 @@
       owner: devops
       group: devops
     when: run_clonezilla_custom_vm_creation_flag
+  - name: Set authorized key taken from file
+    ansible.posix.authorized_key:
+      user: devops
+      state: present
+      key: "{{ lookup('file', '/home/devops/.ssh/{{ssh_key_filename}}.pub') }}"
   - name: Unzip the CloneZilla ISO
     command: 7z x ./"{{ clonezilla_image_file_name }}" -o./iso/clonezilla -aoa
     when: run_clonezilla_custom_vm_creation_flag
@@ -159,7 +164,7 @@
     when: run_clonezilla_custom_vm_creation_flag
   - name: Add required SSH pub key to skel
     copy:
-      src: "~/.ssh/{{ssh_key_filename}}.pub"
+      src: "/home/devops/.ssh/{{ssh_key_filename}}.pub"
       dest: ./iso/fs/etc/skel/.ssh
       force: yes 
     when: run_clonezilla_custom_vm_creation_flag
