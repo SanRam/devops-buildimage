@@ -10,7 +10,7 @@
     https_proxy: "http://172.17.89.251:8080"
     ssh_key_filename: id_rsa_clonezilla_to_buildserver
     run_rocky_vm_creation_flag: false
-    run_clonezilla_custom_vm_creation_flag: false
+    run_clonezilla_custom_vm_creation_flag: true
   tasks:
   - name: Install required packages for libvirt/Qemu.
     dnf:
@@ -164,7 +164,7 @@
     when: run_clonezilla_custom_vm_creation_flag
   - name: Add pub key for devops user of buildserver to clonezilla skel
     copy:
-      src: "/home/devops/.ssh/{{ssh_key_filename}}.pub"
+      src: "/home/devops/.ssh/{{ssh_key_filename}}"
       dest: ./iso/fs/etc/skel/.ssh
       force: yes 
     when: run_clonezilla_custom_vm_creation_flag
