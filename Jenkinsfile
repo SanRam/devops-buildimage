@@ -11,11 +11,16 @@ pipeline {
         '''
       }      
     }
-    stage('Run Ansible Build Image') {
+    stage('Build Image through ansible on a VM') {
       steps {
         sh 'ansible-galaxy collection install -r requirements.yml'
         sh 'ansible-playbook build_image.yml'
       }      
+    }
+    stage('Sync generated file from VM to pxeserver') {
+      steps {
+          sh "rsync -av /home/devops/partclonedata/* rchengpxe:/srv/www/repos/blobs/rockyimage/"          
+      }
     }
   }
 }
