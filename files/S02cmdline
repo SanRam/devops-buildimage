@@ -4,4 +4,5 @@ echo "success"
 #/usr/sbin/partclone.fat32 -c -s /dev/vda1 | gzip -c - > efi.img.gz
 #/usr/sbin/partclone.ext4 -c -s /dev/vda2 | gzip -c - > boot.img.gz
 #/usr/sbin/partclone.ext4 -c -s /dev/vda2 | gzip -c - > root.img.gz
+dhclient eth0
 /bin/bash
