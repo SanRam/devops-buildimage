@@ -10,7 +10,7 @@
     https_proxy: "http://172.17.89.251:8080"
     ssh_key_filename: id_rsa_clonezilla_to_buildserver
     run_rocky_vm_creation_flag: false
-    run_clonezilla_custom_vm_creation_flag: true
+    run_clonezilla_custom_vm_creation_flag: false
   tasks:
   - name: Install required packages for libvirt/Qemu.
     dnf:
