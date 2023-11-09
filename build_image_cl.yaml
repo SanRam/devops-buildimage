@@ -8,7 +8,9 @@
     clonezilla_image_file_name: "clonezilla-live-3.1.0-22-amd64.iso"
     clonezilla_image_checksum: "sha256:23ea69c738596292a78de07e77a211d06226144234d592ca0945cf5eccaa17b1"
     https_proxy: "http://172.17.89.251:8080"
+    ssh_key_filename: id_rsa_clonezilla_to_buildserver
     run_rocky_vm_creation_flag: false
+    run_clonezilla_custom_vm_creation_flag: true
   tasks:
   - name: Install required packages for libvirt/Qemu.
     dnf:
@@ -31,6 +33,7 @@
         - p7zip-plugins
         - xorriso
         - syslinux-nonlinux
+        - edk2-ovmf
       state: latest
   - name: Download Rocky 9.2 DVD file with check (sha256)
     ansible.builtin.get_url:
@@ -72,6 +75,13 @@
   - name: Create a predefined disk image
     command: qemu-img create -f qcow2 ./files/rockyvm.qcow2 40000M
     when: run_rocky_vm_creation_flag
+
+  - name: Stop/Poweroff running VM (not gracefull)
+    command: virsh destroy "clonevm"
+    ignore_errors: true
+  - name: Undefine Old VM
+    command: virsh undefine "clonevm"
+    ignore_errors: true
     
   - name: Install/configure/create Rocky VM - from iso and kisckstart
     command: virt-install --name "rockyvm"
@@ -85,9 +95,13 @@
              --initrd-inject=./files/ssg-rhel9-stig-ks.cfg
              --extra-args="inst.ks=file:/ssg-rhel9-stig-ks.cfg console=tty0 console=ttyS0,115200n8" 
              --network bridge=virbr0,model=virtio             
-             --wait=-1
+             --wait=-1             
              --os-variant "rocky9.0"
-             --debug
+             --arch x86_64
+             --machine q35
+             --serial=pty
+             --features smm=on
+             --boot uefi           
     when: run_rocky_vm_creation_flag
         
   - name: wait for VMs ssh
@@ -97,6 +111,7 @@
       delay: 10
       timeout: 300
     when: 0 > 1
+
     
   - name: Stop/Poweroff running VM (not gracefull)
     command: virsh destroy "rockyvm"
@@ -110,6 +125,7 @@
   - name: Undefine Old VM
     command: virsh undefine "clonevm"
     ignore_errors: true
+  
   - name: Delete Previous content & directory of ISO
     file:
       state: absent
@@ -119,30 +135,69 @@
       path: ./iso/clonezilla
       state: directory
       mode: '0755'
-        
+    when: run_clonezilla_custom_vm_creation_flag 
+  - name: Generate OpenSSH keypair "{{ssh_key_filename}}" this is needed for copying partclone file from clonezilla to buildserver
+    openssh_keypair:
+      path: "/home/devops/.ssh/{{ssh_key_filename}}"
+      type: rsa
+      size: 4096
+      state: present
+      force: false
+      owner: devops
+      group: devops
+    when: run_clonezilla_custom_vm_creation_flag
+  - name: Set authorized key taken from file
+    ansible.posix.authorized_key:
+      user: devops
+      state: present
+      key: "{{ lookup('file', '/home/devops/.ssh/{{ssh_key_filename}}.pub') }}"
   - name: Unzip the CloneZilla ISO
     command: 7z x ./"{{ clonezilla_image_file_name }}" -o./iso/clonezilla -aoa
-    when: run_rocky_vm_creation_flag
+    when: run_clonezilla_custom_vm_creation_flag
   - name: Uncompress Sqashfs Filesystem 
     command: unsquashfs -d ./iso/fs ./iso/clonezilla/live/filesystem.squashfs    
-    when: run_rocky_vm_creation_flag
+    when: run_clonezilla_custom_vm_creation_flag
+  - name: Creates directory for SSH pub key location
+    file:
+      path: ./iso/fs/etc/skel/.ssh
+      state: directory
+    when: run_clonezilla_custom_vm_creation_flag
+  - name: Add pub key for devops user of buildserver to clonezilla skel
+    copy:
+      src: "/home/devops/.ssh/{{ssh_key_filename}}"
+      dest: ./iso/fs/etc/skel/.ssh
+      force: yes 
+    when: run_clonezilla_custom_vm_creation_flag
   - name: Add required start scripts to Sqaushfs
     copy:
       src: ./files/S02cmdline
       dest: ./iso/fs/etc/ocs/ocs-live.d/S02cmdline
       force: yes 
       mode: a+x
-    when: run_rocky_vm_creation_flag
+    when: run_clonezilla_custom_vm_creation_flag
+  - name: Delete Unnessary files Squashfs
+    file:
+      state: absent
+      path: '{{ item }}'
+    with_items:
+      - ./iso/fs/etc/ocs/ocs-live.d/S03prep-drbl-clonezilla
+      - ./iso/fs/etc/ocs/ocs-live.d/S04font-size
+      - ./iso/fs/etc/ocs/ocs-live.d/S05-lang-kbd-conf
+      - ./iso/fs/etc/ocs/ocs-live.d/S07arm-wol
+      - ./iso/fs/etc/ocs/ocs-live.d/S08speakup
+      - ./iso/fs/etc/ocs/ocs-live.d/S99ocs-end
+    when: run_clonezilla_custom_vm_creation_flag  
+    
   - name: Compress Sqashfs Filesystem 
     command: mksquashfs ./iso/fs ./iso/filesystem.squashfs    
-    when: run_rocky_vm_creation_flag
+    when: run_clonezilla_custom_vm_creation_flag
   - name: Copy Custom Sqaushfs back to Clonezilla ISO
     copy:
       src: ./iso/filesystem.squashfs
       dest: ./iso/clonezilla/live/filesystem.squashfs
       force: yes 
       mode: '0644'
-    when: run_rocky_vm_creation_flag
+    when: run_clonezilla_custom_vm_creation_flag
   - name: Make Custom Clonezilla ISO with required params/setting
     command: xorriso -as mkisofs -R -r -J -joliet-long -l -cache-inodes 
              -iso-level 3 -isohybrid-mbr /usr/share/syslinux/isohdpfx.bin 
@@ -150,8 +205,8 @@
              -p "live-build" -publisher "Debian Live project; STERIS Custom" -V "Debian 20231104-13:44" 
              --modification-date=2023110405440900 -b syslinux/isolinux.bin -c syslinux/boot.cat 
              -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img 
-             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o clonezilla_custom_cl.iso ./iso/clonezilla
-    when: run_rocky_vm_creation_flag
+             -no-emul-boot -isohybrid-gpt-basdat -isohybrid-apm-hfsplus -o clonezilla_custom.iso ./iso/clonezilla
+    when: run_clonezilla_custom_vm_creation_flag
   - name: Create Directory to load partclone file images
     file:
       path: ./iso/partclonedata
@@ -162,13 +217,11 @@
              --memory 4000
              --vcpus 8
              --metadata "description=Clonezilla"
-             --cdrom ./clonezilla_custom_cl.iso 
+             --cdrom ./clonezilla_custom.iso 
              --noautoconsole
              --graphics vnc
-             --disk ./files/rockyvm.qcow2,size=1                 
-             --network bridge=virbr0,model=virtio             
+             --disk ./files/rockyvm.qcow2,size=1            
              --wait=-1
              --os-variant "linux2022"
              --check path_in_use=off
   
-
