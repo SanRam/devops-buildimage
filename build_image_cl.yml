@@ -196,6 +196,12 @@
       dest: ./iso/clonezilla/syslinux/syslinux.cfg
       force: yes
     when: run_clonezilla_custom_vm_creation_flag
+  - name: Add SSH Config file to mount build server directory
+    copy:
+      src: ./files/ssh-config
+      dest: /.ssh/config
+      force: yes
+    when: run_clonezilla_custom_vm_creation_flag
    
     
   - name: Compress Sqashfs Filesystem 
