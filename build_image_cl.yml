@@ -81,7 +81,7 @@
     when: run_rocky_vm_creation_flag
 
   - name: Stop/Poweroff running VM (not gracefull)
-    command: virsh destroy "clonevm"
+    command: virsh destroy "clonevm" --nvram
     ignore_errors: true
   - name: Undefine Old VM
     command: virsh undefine "clonevm"
@@ -124,10 +124,10 @@
     command: virsh undefine "rockyvm"
     ignore_errors: true
   - name: Stop/Poweroff running VM (not gracefull)
-    command: virsh destroy "clonevm"
+    command: virsh destroy "clonevm" --nvram
     ignore_errors: true
   - name: Undefine Old VM
-    command: virsh undefine "clonevm" --nvram
+    command: virsh undefine "clonevm"
     ignore_errors: true
   
   - name: Delete Previous content & directory of ISO
