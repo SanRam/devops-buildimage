@@ -127,7 +127,7 @@
     command: virsh destroy "clonevm" --nvram
     ignore_errors: true
   - name: Undefine Old VM
-    command: virsh undefine "clonevm"
+    command: virsh undefine "clonevm" --nvram
     ignore_errors: true
   
   - name: Delete Previous content & directory of ISO
