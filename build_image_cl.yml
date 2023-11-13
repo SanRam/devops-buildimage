@@ -72,6 +72,10 @@
     command: virsh undefine "rockyvm" --remove-all-storage
     ignore_errors: true
     when: run_rocky_vm_creation_flag
+  - name: Remove Old Clonezilla VM
+    command: virsh undefine "clonevm" --remove-all-storage
+    ignore_errors: true
+    when: run_rocky_vm_creation_flag
   - name: Create a predefined disk image
     command: qemu-img create -f qcow2 ./files/rockyvm.qcow2 40000M
     when: run_rocky_vm_creation_flag
