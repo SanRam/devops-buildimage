@@ -139,7 +139,7 @@
       path: ./iso/clonezilla
       state: directory
       mode: '0755'
-    when: run_clonezilla_custom_vm_creation_flag 
+    when: run_clonezilla_custom_vm_creation_flag   
   - name: Generate OpenSSH keypair "{{ssh_key_filename}}" this is needed for copying partclone file from clonezilla to buildserver
     openssh_keypair:
       path: "/home/devops/.ssh/{{ssh_key_filename}}"
@@ -196,6 +196,12 @@
       dest: ./iso/clonezilla/syslinux/syslinux.cfg
       force: yes
     when: run_clonezilla_custom_vm_creation_flag
+  - name: Creates .ssh in root directory of Clonezilla
+    file:
+      path: ./iso/clonezilla/.ssh
+      state: directory
+      mode: '0755'
+    when: run_clonezilla_custom_vm_creation_flag 
   - name: Add SSH Config file to mount build server directory
     copy:
       src: ./files/ssh-config
