@@ -199,7 +199,7 @@
   - name: Add SSH Config file to mount build server directory
     copy:
       src: ./files/ssh-config
-      dest: /.ssh/config
+      dest: ./iso/clonezilla/.ssh/config
       force: yes
     when: run_clonezilla_custom_vm_creation_flag
    
