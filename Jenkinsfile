@@ -14,7 +14,7 @@ pipeline {
     stage('Build Image through ansible on a VM') {
       steps {
         sh 'ansible-galaxy collection install -r requirements.yml'
-        sh 'ansible-playbook build_image.yml'
+        sh 'ansible-playbook build_image_cl.yml'
       }      
     }
     stage('Sync generated file from VM to pxeserver') {
