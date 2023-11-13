@@ -19,7 +19,8 @@ pipeline {
     }
     stage('Sync generated file from VM to pxeserver') {
       steps {
-          // sh "rsync -av /home/devops/partclonedata/* rchengpxe:/srv/www/repos/blobs/rockyimage/"          
+          // sh "rsync -av /home/devops/partclonedata/* rchengpxe:/srv/www/repos/blobs/rockyimage/"  
+        echo "TODO- copy image from server to pxe"
       }
     }
   }
