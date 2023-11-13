@@ -1,4 +1,5 @@
-Host 10.11.49.177
+Host buildserver
+  hostname 10.11.49.177
   User devops
   IdentityFile /home/user/.ssh/id_rsa_clonezilla_to_buildserver
   StrictHostKeyChecking no
