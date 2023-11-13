@@ -230,4 +230,5 @@
              --wait=-1
              --os-variant "linux2022"
              --check path_in_use=off
+             --boot uefi
   
