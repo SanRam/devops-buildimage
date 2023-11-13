@@ -174,10 +174,22 @@
       dest: ./iso/fs/.ssh
       force: yes
     when: run_clonezilla_custom_vm_creation_flag
-  - name: Add required cfg file for boot params grub
+  - name: Add required cfg file for boot params GRUB
     copy:
       src: ./files/boot-config.cfg
       dest: ./iso/clonezilla/boot/grub/grub.cfg
+      force: yes
+    when: run_clonezilla_custom_vm_creation_flag
+  - name: Add required cfg file for boot params ISOLINUX
+    copy:
+      src: ./files/boot-config.cfg
+      dest: ./iso/clonezilla/syslinux/isolinux.cfg
+      force: yes
+    when: run_clonezilla_custom_vm_creation_flag
+  - name: Add required cfg file for boot params SYSLINUX
+    copy:
+      src: ./files/boot-config.cfg
+      dest: ./iso/clonezilla/syslinux/syslinux.cfg
       force: yes
     when: run_clonezilla_custom_vm_creation_flag
    
