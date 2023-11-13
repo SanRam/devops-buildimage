@@ -9,7 +9,7 @@
     clonezilla_image_checksum: "sha256:23ea69c738596292a78de07e77a211d06226144234d592ca0945cf5eccaa17b1"
     https_proxy: "http://172.17.89.251:8080"
     ssh_key_filename: id_rsa_clonezilla_to_buildserver
-    run_rocky_vm_creation_flag: true
+    run_rocky_vm_creation_flag: false
     run_clonezilla_custom_vm_creation_flag: true
   tasks:
   - name: Install required packages for libvirt/Qemu.
